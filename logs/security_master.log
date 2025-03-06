@@ -1,0 +1,259 @@
+2025-03-02 21:58:58,070 - security_master - INFO - Downloading security master from https://directlink.icicidirect.com/NewSecurityMaster/SecurityMaster.zip
+2025-03-02 21:58:58,924 - security_master - ERROR - No CSV file found in security master ZIP
+2025-03-02 21:58:58,924 - security_master - INFO - Downloading security master from https://directlink.icicidirect.com/NewSecurityMaster/SecurityMaster.zip
+2025-03-02 21:58:59,494 - security_master - ERROR - No CSV file found in security master ZIP
+2025-03-02 21:58:59,494 - security_master - ERROR - Failed to download security master and no cache available
+2025-03-02 21:59:37,377 - security_master - INFO - Downloading security master from https://directlink.icicidirect.com/NewSecurityMaster/SecurityMaster.zip
+2025-03-02 21:59:38,120 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 21:59:38,120 - security_master - INFO - Downloading security master from https://directlink.icicidirect.com/NewSecurityMaster/SecurityMaster.zip
+2025-03-02 21:59:38,949 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 21:59:38,949 - security_master - ERROR - Failed to download security master and no cache available
+2025-03-02 22:06:48,956 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:06:50,087 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:06:50,087 - security_master - INFO - Download attempt 2/3
+2025-03-02 22:06:50,643 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:06:50,643 - security_master - INFO - Download attempt 3/3
+2025-03-02 22:06:51,147 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:06:51,163 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:06:51,608 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:06:51,608 - security_master - INFO - Download attempt 2/3
+2025-03-02 22:06:52,177 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:06:52,177 - security_master - INFO - Download attempt 3/3
+2025-03-02 22:06:52,837 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:06:52,837 - security_master - ERROR - Failed to download security master and no cache available
+2025-03-02 22:10:19,589 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:10:20,893 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:10:20,893 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=DmPAb1hFEKwHH54SkTkxGw$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafab93f970b9fbf0f920af3c7742257d3125355115704117e25554f881a853aec4a843616639afca1ae92b9c756f8ba5816518eef2acb01cf07f445ad026fa3871b2a60d52b7bda11f75263ebb09451f9f8; Path=/; , TSb99badf8027=08ec943147ab2000377326bed64b526d2d6e6e15cfa568c520e78d61695546e7255eafbac99a3ca80868b2dfb711300082ae044b233de1106cac70ca2e4e253585e5b7bf1670c79b6b6df3e99cb771031087221c51b350cf8a44ad787aab4264; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:40:20 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:10:20,905 - security_master - INFO - Saved raw download to cache\debug_security_master_0.zip
+2025-03-02 22:10:20,907 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:10:20,907 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:10:20,907 - security_master - INFO - Download attempt 2/3
+2025-03-02 22:10:22,183 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:10:22,190 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=F9jVBlhFEKxjIrNYljSlRA$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafa8b4fc70e901b9c7c2b1bfeb1fc4fc64caee7d7f935a048ec7a11daa22f0d5bc03f6364bae3c96bdd1075ceee3cff82f67fff6034a2d8aba57589ee5b7f0e4a14fe121b932c24e264844fa01a77e70d9a; Path=/; , TSb99badf8027=08ec943147ab20006496f832cfd0668e6de2b8db5d3992d8bd6ac177f4dd3f1e32cf20ffc48b8f6b080912abcb11300098c1838e6dcaaaa138f1c958557961928a1a4e7a00fdfc1883da1bf9caeaa0f5988197aca02950994ae6ae06ccd88884; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:40:21 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:10:22,190 - security_master - INFO - Saved raw download to cache\debug_security_master_1.zip
+2025-03-02 22:10:22,190 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:10:22,190 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:10:22,197 - security_master - INFO - Download attempt 3/3
+2025-03-02 22:10:22,840 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:10:22,840 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=Bgi5b1hFEKyEp/8d2y7Adw$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafa75a002cff03681663d7ecb887762c719fadaf9bc3d6d0c759dd9ed95491b2eebf2408fa846feff658e8f66d4398eb572a151f9a7851dfa9d8d6665d6a1402317114c5767e00fb16edd10e4751d817baa; Path=/; , TSb99badf8027=08ec943147ab20004b7e0d7a9fd3c8b0d4754ab3054dce927a49043d1d4ad2379f6fa497299fc6e5084e420149113000a603ebdb2455bad4bc84ae3282ad9a8fa7daa0e49dbf6f1d31791a78839fe7620cc62986001a7a4c31feb06231201184; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:40:22 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:10:22,844 - security_master - INFO - Saved raw download to cache\debug_security_master_2.zip
+2025-03-02 22:10:22,844 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:10:22,844 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:10:22,850 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:10:23,605 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:10:23,605 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=GK22BlhFEKxQtmM7fD88SA$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafaf714d5d9d71ee89adefaf7ba74910787dad9fa5bc54634c8d4732cde6cf45fbb358a0746f286ea6788a1a12e515fcb3a09a08c327ba9a737bf5983fd93a859c75988e38e8eb52d072749b537d26c26c0; Path=/; , TSb99badf8027=08ec943147ab20008a7c5795a37433e580a621c9f791dd2c1073efab6838983f57a63de54187e01a0894f7f0aa1130006f295b556f893bdf51f8fdff16bf9f1cd23980163b0abec227fd89732ebb9a5d3ac219cdbd998bd029a620b7933b380f; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:40:22 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:10:23,605 - security_master - INFO - Saved raw download to cache\debug_security_master_0.zip
+2025-03-02 22:10:23,612 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:10:23,612 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:10:23,612 - security_master - INFO - Download attempt 2/3
+2025-03-02 22:10:24,278 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:10:24,278 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=G8f0JlhFEKzmb/xDOTPCOg$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafaa7d75b4ec033f9cb9902bd5707fe40d0ce0dfb4debfe42c867083c675179459a3f8d479eabdede4ee75f4f251a8daf93d1df1dac5202975f45e33e6ac40825be82120abb648d98979466e1f601d1ae99; Path=/; , TSb99badf8027=08ec943147ab2000d28f0543f61785d75c649bd15058dcd6b1e98d3296370e2c863803a514c46ccd0892c7948a11300035bb39b98a1c23dc51f8fdff16bf9f1c320a5ea40bcf13732db48fff07826c65fb9da970e8d1824feea2505de17bd333; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:40:23 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:10:24,278 - security_master - INFO - Saved raw download to cache\debug_security_master_1.zip
+2025-03-02 22:10:24,278 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:10:24,285 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:10:24,285 - security_master - INFO - Download attempt 3/3
+2025-03-02 22:10:25,617 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:10:25,617 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=EMrjZlhFEKwwNosVLT5AMA$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafaba1be6197bd9a48106a236826df83d26e51cc3582e0f138b9849cbf4aeb57ab4c1666458c6270d443f9b21899d36b9eb1451f59c56b12e6c5213679dc7112da88d5d57caad956966dc34b70b48917324; Path=/; , TSb99badf8027=08ec943147ab2000aa50c55b6c70c85e99632e0738579d6105e1971483ed09c216e16a41ddd2771f088a3cc67e1130006b82486e548b2d87db2e517b12c6c25a8daa05f4e4b51b03e05507f47f80433a8631c6dcd81a0bb37cb681b5f96164b2; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:40:25 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:10:25,617 - security_master - INFO - Saved raw download to cache\debug_security_master_2.zip
+2025-03-02 22:10:25,623 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:10:25,624 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:10:25,624 - security_master - ERROR - Failed to download security master and no cache available
+2025-03-02 22:12:35,243 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:12:35,944 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:12:35,944 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=BLysD1hFEKwELGlgsfmiVw$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafa65b2f6725e4ceaa20da47b2564b387e512fd9e468acc6a11fdc4bc611fa692b92166b12f478cee6d1cb9a33b3a9f42d6aaf52d4100e17286fb0f77fb5c810961afdbb0ab44ead2a87e176a8882ca15f2; Path=/; , TSb99badf8027=08ec943147ab20003106e1d84738db51832b69cea713c98e668ed268f6608512a59c56fcf1b879ce088f6333d1113000418abce5577e36724c4f21b67fdc9328f8538ac39d8110540019ca1397204b9cfd80e123f9062ba8a681c802cc833f51; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:42:35 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:12:35,944 - security_master - INFO - Saved raw download to cache\debug_security_master_0.zip
+2025-03-02 22:12:35,944 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:12:35,944 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:12:35,944 - security_master - INFO - Download attempt 2/3
+2025-03-02 22:12:37,562 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:12:37,562 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=Dxaub1hFEKxdFBF7C9VELw$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafa25c3d6ddf2903807e2ff2e437468564f6bb8073a3a6507ec60199918ba3a514b706bedf05e213b35aa271087a232fdb7a0efc6860429cb6d82a92ccffdc82e3c4434b6fb24cd3efd6aa056de7e54b661; Path=/; , TSb99badf8027=08ec943147ab20002863d764aeb57fb1fcfda4e91edcb69e774691344b4ab6b44bc14a9e8f0df6af08f3ee706a113000c13e6f4e986c1435cad2e05f72bd92212d46b50ef6c8c8f27477fdfad80bb61bd09ed0cd90993293f14f29f849f7bc8d; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:42:36 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:12:37,567 - security_master - INFO - Saved raw download to cache\debug_security_master_1.zip
+2025-03-02 22:12:37,567 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:12:37,567 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:12:37,567 - security_master - INFO - Download attempt 3/3
+2025-03-02 22:12:38,287 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:12:38,302 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=FhDVBlhFEKww+QNPXJejXQ$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafae5b76f432f315b78337f5c1575ccb0412f746524c35b8183a149bfc92175d98db95683f6788135cdebd95ab05d88b1fe88c1c0e54fc92db726e163c10612d4212319382ce798137094088204be7d1671; Path=/; , TSb99badf8027=08ec943147ab2000967cba13d72b4c67ea370dd5e5e262e67bc9b54210397169ef4adfa2123b1a16086f97258a113000412890c568cd1a29495552415371de4bdcd6e532d83aef29861b81456c688be7a899506bd5ac6630aca47866da019653; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:42:37 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:12:38,302 - security_master - INFO - Saved raw download to cache\debug_security_master_2.zip
+2025-03-02 22:12:38,302 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:12:38,302 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:12:38,302 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:12:38,968 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:12:38,984 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=DZWjL1hFEKylJTsS/73aQA$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafa908420a1186a97e030b17ffcd44a355aa51f0fb4a595fce27fdaab0232edda1b31020825b37a38bc8c0b2753c6382f20a3f6251b9f3aa1a8ea1f1902850b3c57e18fe5f405f220cba6436b7200ad9156; Path=/; , TSb99badf8027=08ec943147ab2000a9bf6ca582413a3a561d8175497de37f33cf252d98f484a1e96e0e9c6e8dd1ab08807d3306113000315fe0f1ccbca4dfc91fef69a910fa19f39316cb0ab0e581d80994cc549934f1cdb549037400ba308ed6cbc7aa6fd456; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:42:37 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:12:38,984 - security_master - INFO - Saved raw download to cache\debug_security_master_0.zip
+2025-03-02 22:12:38,984 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:12:38,984 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:12:38,984 - security_master - INFO - Download attempt 2/3
+2025-03-02 22:12:39,598 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:12:39,598 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=BbasL1hFEKzQnnQqBn2cGQ$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafae85429aae3d479198798fcbbc4817e8686cea4841c7bbb5826a9cdf8d0940955f96e0a046c6310c8e0739092ddc09dad008a4817c44b13113e66d09cfa3dd82a79cad1b381cc8f6fe9a4a1f9dc1b3714; Path=/; , TSb99badf8027=08ec943147ab20002667edf7d774f873c19cc06888a22e78aca7f789d9506bbb413e29f8749b98fc08c3dd6829113000efc702df55d402c540c85db5596e0ac4bccd8597aa1e1cae423276461036516d65e99cbc1b20c635b4f671426a569f2b; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:42:39 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:12:39,598 - security_master - INFO - Saved raw download to cache\debug_security_master_1.zip
+2025-03-02 22:12:39,598 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:12:39,598 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:12:39,598 - security_master - INFO - Download attempt 3/3
+2025-03-02 22:12:40,317 - security_master - INFO - Response Status Code: 200
+2025-03-02 22:12:40,317 - security_master - INFO - Response Headers: {'Set-Cookie': 'DirectInternet=E9HIJlhFEKwFg9tfUXiUXg$$; Path=/, BIGipServerPool_directlink.icicidirect.com=1480921260.47873.0000; path=/; Httponly; Secure, TS0144d722=01395baafa40a36bca9ba59d1896a3ec6d66729b65496ef777f349bb8ace992171d14aade765ce73761ec722108d71f15bd058413b447fd075f8089fdfc47864412627633fa7c6149c91d4bfc7d199601a0dbebba5; Path=/; , TSb99badf8027=08ec943147ab2000567aaa6510a2f09b6fe7162bc415d55baf6c268f519fb12e5539cb34fa51d46708a9a4ec6b1130008e866999fa150bf540c85db5596e0ac4540f2fc60ee0002fc36681d9bcdfa98cdb8caab59d03b4d71f158d2cc9181827; Path=/', 'Content-Type': 'application/x-zip-compressed', 'Last-Modified': 'Fri, 28 Feb 2025 01:42:27 GMT', 'Accept-Ranges': 'bytes', 'ETag': '"09d2168289db1:0"', 'Date': 'Sun, 02 Mar 2025 16:42:39 GMT', 'Content-Length': '2283015'}
+2025-03-02 22:12:40,317 - security_master - INFO - Saved raw download to cache\debug_security_master_2.zip
+2025-03-02 22:12:40,317 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:12:40,317 - security_master - ERROR - No CSV files found in security master ZIP
+2025-03-02 22:12:40,317 - security_master - ERROR - Failed to download security master and no cache available
+2025-03-02 22:21:38,271 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:21:39,026 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:21:39,058 - security_master - INFO - Converted cache\BSEScripMaster.txt to cache\BSEScripMaster.csv using delimiter ','
+2025-03-02 22:21:39,058 - security_master - INFO - Converted BSEScripMaster.txt to cache\BSEScripMaster.csv
+2025-03-02 22:21:39,073 - security_master - INFO - Converted cache\CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv using delimiter ','
+2025-03-02 22:21:39,073 - security_master - INFO - Converted CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv
+2025-03-02 22:21:39,089 - security_master - INFO - Converted cache\FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv using delimiter ','
+2025-03-02 22:21:39,089 - security_master - INFO - Converted FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv
+2025-03-02 22:21:39,248 - security_master - INFO - Converted cache\FONSEScripMaster.txt to cache\FONSEScripMaster.csv using delimiter ','
+2025-03-02 22:21:39,264 - security_master - INFO - Converted FONSEScripMaster.txt to cache\FONSEScripMaster.csv
+2025-03-02 22:21:39,277 - security_master - INFO - Converted cache\NSEScripMaster.txt to cache\NSEScripMaster.csv using delimiter ','
+2025-03-02 22:21:39,277 - security_master - INFO - Converted NSEScripMaster.txt to cache\NSEScripMaster.csv
+2025-03-02 22:21:39,285 - security_master - INFO - Security master downloaded and converted successfully to cache\security_master.csv
+2025-03-02 22:25:21,207 - security_master - INFO - Download attempt 1/3
+2025-03-02 22:25:22,149 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-02 22:25:22,180 - security_master - INFO - Converted cache\BSEScripMaster.txt to cache\BSEScripMaster.csv using delimiter ','
+2025-03-02 22:25:22,180 - security_master - INFO - Converted BSEScripMaster.txt to cache\BSEScripMaster.csv
+2025-03-02 22:25:22,196 - security_master - INFO - Converted cache\CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv using delimiter ','
+2025-03-02 22:25:22,196 - security_master - INFO - Converted CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv
+2025-03-02 22:25:22,212 - security_master - INFO - Converted cache\FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv using delimiter ','
+2025-03-02 22:25:22,212 - security_master - INFO - Converted FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv
+2025-03-02 22:25:22,386 - security_master - INFO - Converted cache\FONSEScripMaster.txt to cache\FONSEScripMaster.csv using delimiter ','
+2025-03-02 22:25:22,386 - security_master - INFO - Converted FONSEScripMaster.txt to cache\FONSEScripMaster.csv
+2025-03-02 22:25:22,402 - security_master - INFO - Converted cache\NSEScripMaster.txt to cache\NSEScripMaster.csv using delimiter ','
+2025-03-02 22:25:22,402 - security_master - INFO - Converted NSEScripMaster.txt to cache\NSEScripMaster.csv
+2025-03-02 22:25:22,417 - security_master - INFO - Security master downloaded and converted successfully to cache\security_master.csv
+2025-03-02 22:25:22,417 - security_master - INFO - Loading security master from cache\security_master.csv
+2025-03-02 22:25:22,480 - security_master - ERROR - Required columns missing in security master. Columns: ['Token', 'ShortName', 'Series', 'CompanyName', 'TickSize', 'LotSize', 'ScripCode', 'MarketLot', 'BCastFlag', 'AVMBuyMargin', 'AVMSellMargin', 'ScripID', 'ScripName', 'GroupName', 'NdFlag', 'NDSDate', 'NDEDate', 'SuspStatus', 'avmflag', 'SuspensionReason', 'Suspensiondate', 'DateOfListing', 'DateOfDeListing', 'IssuePrice', 'FaceValue', 'ISINCode', '52WeeksHigh', '52WeeksLow', 'LifeTimeHigh', 'LifeTimeLow', 'HighDate', 'LowDate', 'MarginPercentage', 'ExchangeCode']
+2025-03-02 22:25:22,480 - security_master - INFO - Security master loaded: 11703 records
+2025-03-02 22:25:22,480 - security_master - ERROR - Symbol column not found in security master. Columns: ['Token', 'ShortName', 'Series', 'CompanyName', 'TickSize', 'LotSize', 'ScripCode', 'MarketLot', 'BCastFlag', 'AVMBuyMargin', 'AVMSellMargin', 'ScripID', 'ScripName', 'GroupName', 'NdFlag', 'NDSDate', 'NDEDate', 'SuspStatus', 'avmflag', 'SuspensionReason', 'Suspensiondate', 'DateOfListing', 'DateOfDeListing', 'IssuePrice', 'FaceValue', 'ISINCode', '52WeeksHigh', '52WeeksLow', 'LifeTimeHigh', 'LifeTimeLow', 'HighDate', 'LowDate', 'MarginPercentage', 'ExchangeCode']
+2025-03-02 22:25:22,480 - security_master - ERROR - Symbol column not found in security master. Columns: ['Token', 'ShortName', 'Series', 'CompanyName', 'TickSize', 'LotSize', 'ScripCode', 'MarketLot', 'BCastFlag', 'AVMBuyMargin', 'AVMSellMargin', 'ScripID', 'ScripName', 'GroupName', 'NdFlag', 'NDSDate', 'NDEDate', 'SuspStatus', 'avmflag', 'SuspensionReason', 'Suspensiondate', 'DateOfListing', 'DateOfDeListing', 'IssuePrice', 'FaceValue', 'ISINCode', '52WeeksHigh', '52WeeksLow', 'LifeTimeHigh', 'LifeTimeLow', 'HighDate', 'LowDate', 'MarginPercentage', 'ExchangeCode']
+2025-03-03 07:28:15,122 - security_master - INFO - Download attempt 1/3
+2025-03-03 07:28:16,455 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-03 07:28:16,487 - security_master - INFO - Converted cache\BSEScripMaster.txt to cache\BSEScripMaster.csv using delimiter ','
+2025-03-03 07:28:16,487 - security_master - INFO - Converted BSEScripMaster.txt to cache\BSEScripMaster.csv
+2025-03-03 07:28:16,512 - security_master - INFO - Converted cache\CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv using delimiter ','
+2025-03-03 07:28:16,514 - security_master - INFO - Converted CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv
+2025-03-03 07:28:16,523 - security_master - INFO - Converted cache\FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv using delimiter ','
+2025-03-03 07:28:16,525 - security_master - INFO - Converted FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv
+2025-03-03 07:28:16,693 - security_master - INFO - Converted cache\FONSEScripMaster.txt to cache\FONSEScripMaster.csv using delimiter ','
+2025-03-03 07:28:16,693 - security_master - INFO - Converted FONSEScripMaster.txt to cache\FONSEScripMaster.csv
+2025-03-03 07:28:16,711 - security_master - INFO - Converted cache\NSEScripMaster.txt to cache\NSEScripMaster.csv using delimiter ','
+2025-03-03 07:28:16,714 - security_master - INFO - Converted NSEScripMaster.txt to cache\NSEScripMaster.csv
+2025-03-03 07:28:16,716 - security_master - INFO - Security master downloaded and converted successfully to cache\security_master.csv
+2025-03-03 07:28:16,722 - security_master - INFO - Loading security master from cache\security_master.csv
+2025-03-03 07:28:16,784 - security_master - INFO - Created maps: 0 tokens, 0 symbols
+2025-03-03 07:28:16,800 - security_master - INFO - Security master loaded: 11704 records
+2025-03-03 07:32:57,591 - security_master - INFO - Download attempt 1/3
+2025-03-03 07:32:58,267 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-03 07:32:58,306 - security_master - INFO - Converted cache\BSEScripMaster.txt to cache\BSEScripMaster.csv using delimiter ','
+2025-03-03 07:32:58,306 - security_master - INFO - Converted BSEScripMaster.txt to cache\BSEScripMaster.csv
+2025-03-03 07:32:58,333 - security_master - INFO - Converted cache\CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv using delimiter ','
+2025-03-03 07:32:58,333 - security_master - INFO - Converted CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv
+2025-03-03 07:32:58,333 - security_master - INFO - Converted cache\FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv using delimiter ','
+2025-03-03 07:32:58,333 - security_master - INFO - Converted FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv
+2025-03-03 07:32:58,507 - security_master - INFO - Converted cache\FONSEScripMaster.txt to cache\FONSEScripMaster.csv using delimiter ','
+2025-03-03 07:32:58,523 - security_master - INFO - Converted FONSEScripMaster.txt to cache\FONSEScripMaster.csv
+2025-03-03 07:32:58,539 - security_master - INFO - Converted cache\NSEScripMaster.txt to cache\NSEScripMaster.csv using delimiter ','
+2025-03-03 07:32:58,539 - security_master - INFO - Converted NSEScripMaster.txt to cache\NSEScripMaster.csv
+2025-03-03 07:32:58,539 - security_master - INFO - Security master downloaded and converted successfully to cache\security_master.csv
+2025-03-03 07:32:58,539 - security_master - INFO - Loading security master from cache\security_master.csv
+2025-03-03 07:32:58,586 - security_master - INFO - Created maps: 0 tokens, 0 symbols
+2025-03-03 07:32:58,586 - security_master - INFO - Security master loaded: 11704 records
+2025-03-03 07:47:50,395 - security_master - INFO - Download attempt 1/3
+2025-03-03 07:47:51,108 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-03 07:47:51,126 - security_master - INFO - Converted cache\BSEScripMaster.txt to cache\BSEScripMaster.csv using delimiter ','
+2025-03-03 07:47:51,126 - security_master - INFO - Converted BSEScripMaster.txt to cache\BSEScripMaster.csv
+2025-03-03 07:47:51,156 - security_master - INFO - Converted cache\CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv using delimiter ','
+2025-03-03 07:47:51,156 - security_master - INFO - Converted CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv
+2025-03-03 07:47:51,172 - security_master - INFO - Converted cache\FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv using delimiter ','
+2025-03-03 07:47:51,172 - security_master - INFO - Converted FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv
+2025-03-03 07:47:51,346 - security_master - INFO - Converted cache\FONSEScripMaster.txt to cache\FONSEScripMaster.csv using delimiter ','
+2025-03-03 07:47:51,346 - security_master - INFO - Converted FONSEScripMaster.txt to cache\FONSEScripMaster.csv
+2025-03-03 07:47:51,362 - security_master - INFO - Converted cache\NSEScripMaster.txt to cache\NSEScripMaster.csv using delimiter ','
+2025-03-03 07:47:51,362 - security_master - INFO - Converted NSEScripMaster.txt to cache\NSEScripMaster.csv
+2025-03-03 07:47:51,378 - security_master - INFO - Security master downloaded and converted successfully to cache\security_master.csv
+2025-03-03 07:47:51,378 - security_master - INFO - Cache file is valid. Created 2025-03-03 07:47:51.378080
+2025-03-03 07:47:51,393 - security_master - INFO - Loaded NSEScripMaster.csv: 4681 records
+2025-03-03 07:47:51,445 - security_master - INFO - Loaded BSEScripMaster.csv: 11704 records
+2025-03-03 07:47:51,834 - security_master - INFO - Loaded FONSEScripMaster.csv: 77347 records
+2025-03-03 07:47:51,850 - security_master - INFO - Loaded FOBSEScripMaster.csv: 3298 records
+2025-03-03 07:47:52,226 - security_master - INFO - Created maps: 0 tokens, 0 symbols
+2025-03-03 07:47:52,248 - security_master - INFO - Combined security master loaded: 96908 total records
+2025-03-03 08:42:43,844 - security_master - INFO - Download attempt 1/3
+2025-03-03 08:42:44,739 - security_master - INFO - ZIP contents: ['BSEScripMaster.txt', 'CDNSEScripMaster.txt', 'FOBSEScripMaster.txt', 'FONSEScripMaster.txt', 'NSEScripMaster.txt']
+2025-03-03 08:42:44,771 - security_master - INFO - Converted cache\BSEScripMaster.txt to cache\BSEScripMaster.csv using delimiter ','
+2025-03-03 08:42:44,786 - security_master - INFO - Converted BSEScripMaster.txt to cache\BSEScripMaster.csv
+2025-03-03 08:42:44,802 - security_master - INFO - Converted cache\CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv using delimiter ','
+2025-03-03 08:42:44,802 - security_master - INFO - Converted CDNSEScripMaster.txt to cache\CDNSEScripMaster.csv
+2025-03-03 08:42:44,818 - security_master - INFO - Converted cache\FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv using delimiter ','
+2025-03-03 08:42:44,818 - security_master - INFO - Converted FOBSEScripMaster.txt to cache\FOBSEScripMaster.csv
+2025-03-03 08:42:45,009 - security_master - INFO - Converted cache\FONSEScripMaster.txt to cache\FONSEScripMaster.csv using delimiter ','
+2025-03-03 08:42:45,014 - security_master - INFO - Converted FONSEScripMaster.txt to cache\FONSEScripMaster.csv
+2025-03-03 08:42:45,027 - security_master - INFO - Converted cache\NSEScripMaster.txt to cache\NSEScripMaster.csv using delimiter ','
+2025-03-03 08:42:45,027 - security_master - INFO - Converted NSEScripMaster.txt to cache\NSEScripMaster.csv
+2025-03-03 08:42:45,037 - security_master - INFO - Security master downloaded and converted successfully to cache\security_master.csv
+2025-03-03 08:42:45,042 - security_master - INFO - Cache file is valid. Created 2025-03-03 08:42:45.037866
+2025-03-03 08:42:45,089 - security_master - INFO - Loaded NSEScripMaster.csv: 4681 records
+2025-03-03 08:42:45,180 - security_master - INFO - Loaded BSEScripMaster.csv: 11704 records
+2025-03-03 08:42:45,612 - security_master - INFO - Loaded FONSEScripMaster.csv: 77347 records
+2025-03-03 08:42:45,636 - security_master - INFO - Loaded FOBSEScripMaster.csv: 3298 records
+2025-03-03 08:42:45,817 - security_master - INFO - Available columns for mapping: Token,  "ShortName",  "Series",  "CompanyName",  "ticksize",  "Lotsize",  "DateOfListing",  "DateOfDeListing",  "IssuePrice",  "FaceValue"...
+2025-03-03 08:42:53,283 - security_master - INFO - Created maps: 92215 tokens, 11699 symbols
+2025-03-03 08:42:53,424 - security_master - INFO - Combined security master loaded: 96908 total records
+2025-03-03 08:42:53,474 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:53,588 - security_master - WARNING - No matches found for query: RELIANCE
+2025-03-03 08:42:53,599 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:53,709 - security_master - WARNING - No matches found for query: TATASTEEL
+2025-03-03 08:42:53,725 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:53,828 - security_master - WARNING - No matches found for query: INFY
+2025-03-03 08:42:53,836 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:53,942 - security_master - WARNING - No matches found for query: HDFC
+2025-03-03 08:42:53,958 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:54,045 - security_master - WARNING - No matches found for query: TCS
+2025-03-03 08:42:54,061 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:54,156 - security_master - WARNING - No matches found for query: NIFTY
+2025-03-03 08:42:54,156 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:54,156 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:54,332 - security_master - INFO - Found 10 matches for query: NIFTY
+2025-03-03 08:42:54,348 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:54,443 - security_master - WARNING - No matches found for query: BANKNIFTY
+2025-03-03 08:42:54,443 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:54,443 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:54,617 - security_master - WARNING - No matches found for query: BANKNIFTY
+2025-03-03 08:42:54,617 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:54,712 - security_master - WARNING - No matches found for query: SENSEX
+2025-03-03 08:42:54,712 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:54,712 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:54,895 - security_master - INFO - Found 10 matches for query: SENSEX
+2025-03-03 08:42:54,904 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName']
+2025-03-03 08:42:54,997 - security_master - WARNING - No matches found for query: MIDCAP
+2025-03-03 08:42:54,997 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:55,003 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:55,171 - security_master - INFO - Found 10 matches for query: MIDCAP
+2025-03-03 08:42:55,187 - security_master - INFO - Searching in columns: ['InstrumentName', 'ShortName']
+2025-03-03 08:42:55,246 - security_master - WARNING - No matches found for query: NIFTY
+2025-03-03 08:42:55,246 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:55,246 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:55,417 - security_master - INFO - Found 10 matches for query: NIFTY
+2025-03-03 08:42:55,433 - security_master - INFO - Searching in columns: ['InstrumentName', 'ShortName']
+2025-03-03 08:42:55,486 - security_master - WARNING - No matches found for query: RELIANCE
+2025-03-03 08:42:55,486 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:55,486 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:55,648 - security_master - INFO - Found 10 matches for query: RELIANCE
+2025-03-03 08:42:55,664 - security_master - INFO - Searching in columns: ['InstrumentName', 'ShortName']
+2025-03-03 08:42:55,731 - security_master - WARNING - No matches found for query: NIFTY
+2025-03-03 08:42:55,731 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:55,731 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:55,901 - security_master - INFO - Found 10 matches for query: NIFTY
+2025-03-03 08:42:55,919 - security_master - INFO - Searching in columns: ['InstrumentName', 'ShortName']
+2025-03-03 08:42:55,981 - security_master - WARNING - No matches found for query: BANKNIFTY
+2025-03-03 08:42:55,981 - security_master - INFO - Trying search without security type filter
+2025-03-03 08:42:55,981 - security_master - INFO - Searching in columns: ['ShortName', 'CompanyName', 'ScripName', 'InstrumentName', 'ShortName']
+2025-03-03 08:42:56,140 - security_master - WARNING - No matches found for query: BANKNIFTY
+2025-03-03 08:42:56,156 - security_master - WARNING - Token not found for RELIANCE (NSE)
+2025-03-03 08:42:56,156 - security_master - WARNING - Token not found for NIFTY (NSE)
+2025-03-03 08:42:56,165 - security_master - WARNING - Token not found for TATASTEEL (NSE)
+2025-03-03 08:42:56,169 - security_master - WARNING - Token not found for HDFC (NSE)
+2025-03-03 08:42:56,172 - security_master - WARNING - Token not found for SBIN (NSE)
+2025-03-03 08:42:56,272 - security_master - WARNING - No expiry dates found for NIFTY
+2025-03-03 08:42:56,336 - security_master - WARNING - No expiry dates found for BANKNIFTY
+2025-03-03 08:42:56,419 - security_master - WARNING - No expiry dates found for RELIANCE

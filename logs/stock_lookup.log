@@ -1,0 +1,14 @@
+2025-03-04 00:40:13,037 - stock_lookup - INFO - Loaded 0 NSE stocks
+2025-03-04 00:40:13,038 - stock_lookup - INFO - Loaded 4 NSE options
+2025-03-04 00:40:13,191 - stock_lookup - INFO - Loaded 77347 token details
+2025-03-04 00:40:13,193 - stock_lookup - INFO - Loaded expiry dates for 221 underlyings
+2025-03-04 00:40:13,195 - stock_lookup - INFO - Loaded option chains for 2 underlyings
+2025-03-04 00:40:13,195 - stock_lookup - WARNING - Stock token not found: RELIANCE
+2025-03-04 00:40:13,197 - stock_lookup - WARNING - Stock token not found: TCS
+2025-03-04 00:40:13,198 - stock_lookup - WARNING - Stock token not found: INFY
+2025-03-04 00:40:13,198 - stock_lookup - WARNING - Stock token not found: HDFCBANK
+2025-03-04 00:40:13,200 - stock_lookup - WARNING - Stock token not found: SBIN
+2025-03-04 00:40:13,200 - stock_lookup - WARNING - Stock token not found: NIFTY
+2025-03-04 00:40:13,201 - stock_lookup - WARNING - Stock token not found: BANKNIFTY
+2025-03-04 00:40:13,201 - stock_lookup - WARNING - Stock token not found: TATASTEEL
+2025-03-04 00:40:13,202 - stock_lookup - WARNING - Stock token not found: ICICIBANK

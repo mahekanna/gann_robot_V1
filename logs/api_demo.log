@@ -1,0 +1,3 @@
+2025-03-02 14:11:39,037 - breeze_auth - INFO - Loading credentials from config\.env
+2025-03-02 14:11:39,039 - breeze_auth - INFO - Credentials loaded successfully
+2025-03-02 14:11:39,900 - breeze_auth - ERROR - Error initializing BreezeConnect: module 'config' has no attribute 'SECURITY_MASTER_URL'
