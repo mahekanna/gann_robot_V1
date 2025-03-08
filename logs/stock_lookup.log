@@ -12,3 +12,17 @@
 2025-03-04 00:40:13,201 - stock_lookup - WARNING - Stock token not found: BANKNIFTY
 2025-03-04 00:40:13,201 - stock_lookup - WARNING - Stock token not found: TATASTEEL
 2025-03-04 00:40:13,202 - stock_lookup - WARNING - Stock token not found: ICICIBANK
+2025-03-09 00:08:53,318 - stock_lookup - INFO - Loaded 0 NSE stocks
+2025-03-09 00:08:53,329 - stock_lookup - INFO - Loaded 4 NSE options
+2025-03-09 00:08:53,471 - stock_lookup - INFO - Loaded 77347 token details
+2025-03-09 00:08:53,473 - stock_lookup - INFO - Loaded expiry dates for 221 underlyings
+2025-03-09 00:08:53,476 - stock_lookup - INFO - Loaded option chains for 2 underlyings
+2025-03-09 00:08:53,476 - stock_lookup - WARNING - Stock token not found: RELIANCE
+2025-03-09 00:08:53,477 - stock_lookup - WARNING - Stock token not found: TCS
+2025-03-09 00:08:53,477 - stock_lookup - WARNING - Stock token not found: INFY
+2025-03-09 00:08:53,478 - stock_lookup - WARNING - Stock token not found: HDFCBANK
+2025-03-09 00:08:53,478 - stock_lookup - WARNING - Stock token not found: SBIN
+2025-03-09 00:08:53,479 - stock_lookup - WARNING - Stock token not found: NIFTY
+2025-03-09 00:08:53,479 - stock_lookup - WARNING - Stock token not found: BANKNIFTY
+2025-03-09 00:08:53,480 - stock_lookup - WARNING - Stock token not found: TATASTEEL
+2025-03-09 00:08:53,480 - stock_lookup - WARNING - Stock token not found: ICICIBANK

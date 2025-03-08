@@ -5,14 +5,21 @@ Created on Sun Mar 02 08:51:09 2025
 @author: Mahesh Naidu
 """
 
+"""
+Backtesting engine for Gann Trading System
+Implements event-driven backtesting for strategy evaluation
+"""
+
 import pandas as pd
 import numpy as np
 from datetime import datetime, timedelta
-from typing import Dict, List, Optional, Union, Tuple, Callable
+from typing import Dict, List, Optional, Union, Tuple, Callable, Any
 import logging
 from enum import Enum
 
-from ..core.strategy.base_strategy import BaseStrategy, TimeFrame, SignalType
+from core.strategy.base_strategy import BaseStrategy, TimeFrame, SignalType
+from core.strategy.equity_strategy import EquityStrategy
+from core.strategy.index_strategy import IndexStrategy
 
 
 class OrderType(Enum):
@@ -39,7 +46,8 @@ class Order:
                 order_type: OrderType = OrderType.MARKET,
                 limit_price: Optional[float] = None,
                 stop_price: Optional[float] = None,
-                order_id: Optional[str] = None):
+                order_id: Optional[str] = None,
+                product_type: str = "CNC"):
         """
         Initialize order
         
@@ -51,6 +59,7 @@ class Order:
             limit_price: Limit price (required for LIMIT and STOP_LIMIT orders)
             stop_price: Stop price (required for STOP and STOP_LIMIT orders)
             order_id: Optional order ID (generated if not provided)
+            product_type: Product type (CNC, MIS)
         """
         self.symbol = symbol
         self.side = side
@@ -59,6 +68,7 @@ class Order:
         self.limit_price = limit_price
         self.stop_price = stop_price
         self.order_id = order_id or f"order_{datetime.now().strftime('%Y%m%d%H%M%S%f')}"
+        self.product_type = product_type
         
         self.created_time = datetime.now()
         self.executed_time = None
@@ -87,7 +97,8 @@ class Order:
 class Position:
     """Position representation for backtesting"""
     
-    def __init__(self, symbol: str, side: OrderSide, quantity: int, entry_price: float, entry_time: datetime):
+    def __init__(self, symbol: str, side: OrderSide, quantity: int, entry_price: float, entry_time: datetime, 
+                product_type: str = "CNC", is_option: bool = False):
         """
         Initialize position
         
@@ -97,12 +108,16 @@ class Position:
             quantity: Position quantity
             entry_price: Average entry price
             entry_time: Entry time
+            product_type: Product type (CNC, MIS)
+            is_option: Whether this is an option position
         """
         self.symbol = symbol
         self.side = side
         self.quantity = quantity
         self.entry_price = entry_price
         self.entry_time = entry_time
+        self.product_type = product_type
+        self.is_option = is_option
         self.exit_price = None
         self.exit_time = None
         self.pnl = 0.0
@@ -195,7 +210,7 @@ class Position:
         return (f"Position(symbol={self.symbol}, side={self.side.value}, "
                 f"qty={self.quantity}, entry_price={self.entry_price}, "
                 f"entry_time={self.entry_time}{exit_info}, "
-                f"pnl={self.pnl:.2f}, status={status})")
+                f"pnl={self.pnl:.2f}, type={'OPTION' if self.is_option else 'EQUITY'}, status={status})")
 
 
 class BacktestEngine:
@@ -205,17 +220,20 @@ class BacktestEngine:
     
     def __init__(self, 
                 initial_capital: float = 100000.0,
-                commission_rate: float = 0.0):
+                commission_rate: float = 0.0,
+                option_chains: Optional[Dict[datetime, pd.DataFrame]] = None):
         """
         Initialize backtesting engine
         
         Args:
             initial_capital: Initial capital
             commission_rate: Commission rate as percentage
+            option_chains: Dictionary of option chain data keyed by date
         """
         self.initial_capital = initial_capital
         self.capital = initial_capital
         self.commission_rate = commission_rate
+        self.option_chains = option_chains
         
         # Performance tracking
         self.equity_curve = []
@@ -223,14 +241,13 @@ class BacktestEngine:
         self.orders = []
         self.positions = []
         self.active_positions = {}  # Symbol -> Position
+        self.active_option_positions = {}  # Symbol -> Position
+        
+        # Position details for strategies
+        self.position_details = {}
         
         # Logging
         self.logger = logging.getLogger("backtest")
-        handler = logging.FileHandler("backtest.log")
-        formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
-        handler.setFormatter(formatter)
-        self.logger.addHandler(handler)
-        self.logger.setLevel(logging.INFO)
         
     def reset(self) -> None:
         """Reset the backtesting engine to initial state"""
@@ -240,6 +257,8 @@ class BacktestEngine:
         self.orders = []
         self.positions = []
         self.active_positions = {}
+        self.active_option_positions = {}
+        self.position_details = {}
         self.logger.info(f"Backtest engine reset. Initial capital: {self.initial_capital}")
         
     def run_backtest(self, 
@@ -278,6 +297,10 @@ class BacktestEngine:
             self.logger.error("No data available for the specified date range")
             return {"error": "No data available for the specified date range"}
             
+        # Convert data index to datetime if not already
+        if not isinstance(data.index, pd.DatetimeIndex):
+            data.index = pd.to_datetime(data.index)
+            
         self.logger.info(f"Starting backtest with {len(data)} bars from {data.index[0]} to {data.index[-1]}")
         
         # Run strategy on each bar
@@ -291,14 +314,15 @@ class BacktestEngine:
             # Process pending orders
             self._process_orders(bar)
             
-            # Update open positions P&L
+            # Update open positions
             self._update_positions(bar)
             
             # Check for strategy signals
             signal = strategy.process_market_data(prev_bars)
             
             # Handle signals
-            self._handle_signal(strategy, signal, bar, prev_bars)
+            if signal != SignalType.NO_SIGNAL:
+                self._handle_signal(strategy, signal, bar, prev_bars)
             
         # Close all open positions at the end of backtest
         self._close_all_positions(data.iloc[-1])
@@ -320,93 +344,178 @@ class BacktestEngine:
             bar: Current price bar
             prev_bars: Previous price bars
         """
+        current_price = bar['close']
+        current_time = bar.name
+        
+        # Get option chain if available
+        option_chain = None
+        if self.option_chains is not None and current_time in self.option_chains:
+            option_chain = self.option_chains[current_time]
+        
         if signal == SignalType.LONG:
-            # Calculate position size
-            gann_signals = strategy.get_gann_signals(bar['close'], prev_bars.iloc[-1]['close'])
-            stop_loss = gann_signals['long_stoploss']
-            position_size = strategy.calculate_position_size(self.capital, bar['close'], stop_loss)
-            
-            # Create and execute buy order
-            self._create_order(strategy.symbol, OrderSide.BUY, position_size, bar)
-            
-            self.logger.info(f"LONG signal at {bar.name}: {strategy.symbol} @ {bar['close']}, "
-                           f"qty={position_size}, stop={stop_loss}")
-                           
+            if isinstance(strategy, EquityStrategy):
+                # Execute equity long strategy
+                execution = strategy.execute_long_strategy(
+                    current_price=current_price,
+                    capital=self.capital,
+                    option_chain=option_chain
+                )
+            elif isinstance(strategy, IndexStrategy):
+                # Execute index long strategy
+                execution = strategy.execute_long_strategy(
+                    current_price=current_price,
+                    capital=self.capital,
+                    option_chain=option_chain
+                )
+            else:
+                self.logger.error(f"Unsupported strategy type: {type(strategy)}")
+                return
+                
+            if "error" in execution:
+                self.logger.error(f"Error executing long strategy: {execution['error']}")
+                return
+                
+            # Store position details
+            self.position_details = execution
+                
+            # Process orders from execution
+            for order_details in execution.get("orders", []):
+                self._create_order_from_details(order_details, current_time)
+                
+            self.logger.info(f"LONG signal executed at {current_price:.2f}")
+                
         elif signal == SignalType.SHORT:
-            # For Equity strategy, we don't short equity directly
-            # Instead, we would buy put options, which would be handled differently
-            # This is a simplification for the backtest
-            
-            # Calculate position size (for put options in real implementation)
-            gann_signals = strategy.get_gann_signals(bar['close'], prev_bars.iloc[-1]['close'])
-            stop_loss = gann_signals['short_stoploss']
-            position_size = strategy.calculate_position_size(self.capital, bar['close'], stop_loss)
-            
-            # Create and execute "short" order (would be put option buy in real implementation)
-            self._create_order(strategy.symbol, OrderSide.SELL, position_size, bar)
-            
-            self.logger.info(f"SHORT signal at {bar.name}: {strategy.symbol} @ {bar['close']}, "
-                           f"qty={position_size}, stop={stop_loss}")
-                           
+            if isinstance(strategy, EquityStrategy):
+                # Execute equity short strategy
+                execution = strategy.execute_short_strategy(
+                    current_price=current_price,
+                    capital=self.capital,
+                    option_chain=option_chain
+                )
+            elif isinstance(strategy, IndexStrategy):
+                # Execute index short strategy
+                execution = strategy.execute_short_strategy(
+                    current_price=current_price,
+                    capital=self.capital,
+                    option_chain=option_chain
+                )
+            else:
+                self.logger.error(f"Unsupported strategy type: {type(strategy)}")
+                return
+                
+            if "error" in execution:
+                self.logger.error(f"Error executing short strategy: {execution['error']}")
+                return
+                
+            # Store position details
+            self.position_details = execution
+                
+            # Process orders from execution
+            for order_details in execution.get("orders", []):
+                self._create_order_from_details(order_details, current_time)
+                
+            self.logger.info(f"SHORT signal executed at {current_price:.2f}")
+                
         elif signal == SignalType.EXIT_LONG:
-            # Exit long position
-            if strategy.symbol in self.active_positions:
-                position = self.active_positions[strategy.symbol]
-                if position.side == OrderSide.BUY:
-                    self._create_order(strategy.symbol, OrderSide.SELL, position.quantity, bar)
-                    self.logger.info(f"EXIT_LONG signal at {bar.name}: {strategy.symbol} @ {bar['close']}, "
-                                   f"qty={position.quantity}")
-                                   
+            if isinstance(strategy, EquityStrategy):
+                # Execute equity exit long strategy
+                execution = strategy.execute_exit_long(
+                    current_price=current_price,
+                    position_details=self.position_details
+                )
+            elif isinstance(strategy, IndexStrategy):
+                # Execute index exit long strategy
+                execution = strategy.execute_exit_long(
+                    current_price=current_price,
+                    position_details=self.position_details
+                )
+            else:
+                self.logger.error(f"Unsupported strategy type: {type(strategy)}")
+                return
+                
+            if "error" in execution:
+                self.logger.error(f"Error executing exit long strategy: {execution['error']}")
+                return
+                
+            # Process orders from execution
+            for order_details in execution.get("orders", []):
+                self._create_order_from_details(order_details, current_time)
+                
+            self.logger.info(f"EXIT_LONG signal executed at {current_price:.2f}")
+                
         elif signal == SignalType.EXIT_SHORT:
-            # Exit short position
-            if strategy.symbol in self.active_positions:
-                position = self.active_positions[strategy.symbol]
-                if position.side == OrderSide.SELL:
-                    self._create_order(strategy.symbol, OrderSide.BUY, position.quantity, bar)
-                    self.logger.info(f"EXIT_SHORT signal at {bar.name}: {strategy.symbol} @ {bar['close']}, "
-                                   f"qty={position.quantity}")
-        
-    def _create_order(self, 
-                     symbol: str, 
-                     side: OrderSide, 
-                     quantity: int, 
-                     bar: pd.Series, 
-                     order_type: OrderType = OrderType.MARKET,
-                     limit_price: Optional[float] = None,
-                     stop_price: Optional[float] = None) -> Order:
-        """
-        Create and execute a new order
-        
-        Args:
-            symbol: Trading symbol
-            side: Buy or sell
-            quantity: Order quantity
-            bar: Current price bar
-            order_type: Type of order
-            limit_price: Limit price
-            stop_price: Stop price
+            if isinstance(strategy, EquityStrategy):
+                # Execute equity exit short strategy
+                execution = strategy.execute_exit_short(
+                    current_price=current_price,
+                    position_details=self.position_details
+                )
+            elif isinstance(strategy, IndexStrategy):
+                # Execute index exit short strategy
+                execution = strategy.execute_exit_short(
+                    current_price=current_price,
+                    position_details=self.position_details
+                )
+            else:
+                self.logger.error(f"Unsupported strategy type: {type(strategy)}")
+                return
+                
+            if "error" in execution:
+                self.logger.error(f"Error executing exit short strategy: {execution['error']}")
+                return
+                
+            # Process orders from execution
+            for order_details in execution.get("orders", []):
+                self._create_order_from_details(order_details, current_time)
+                
+            self.logger.info(f"EXIT_SHORT signal executed at {current_price:.2f}")
+    
+    def _create_order_from_details(self, 
+                                     order_details: Dict[str, Any], 
+                                     current_time: datetime) -> Order:
+            """
+            Create order from details
             
-        Returns:
-            Executed order
-        """
-        # Create order
-        order = Order(
-            symbol=symbol,
-            side=side,
-            quantity=quantity,
-            order_type=order_type,
-            limit_price=limit_price,
-            stop_price=stop_price
-        )
-        
-        # Add to orders list
-        self.orders.append(order)
-        
-        # For market orders, execute immediately
-        if order_type == OrderType.MARKET:
-            self._execute_order(order, bar['close'], bar.name)
-        
-        return order
+            Args:
+                order_details: Order details dictionary
+                current_time: Current bar time
+                
+            Returns:
+                Created order
+            """
+            # Extract order details
+            symbol = order_details.get("symbol")
+            transaction_type = order_details.get("transaction_type")
+            quantity = order_details.get("quantity")
+            price = order_details.get("price")
+            order_type = order_details.get("order_type", "MARKET")
+            product_type = order_details.get("product_type", "CNC")
+            limit_price = order_details.get("limit_price")
+            stop_price = order_details.get("stop_price")
+            
+            # Convert to enum types
+            side = OrderSide.BUY if transaction_type == "BUY" else OrderSide.SELL
+            order_type_enum = OrderType[order_type]
+            
+            # Create and execute order
+            order = Order(
+                symbol=symbol,
+                side=side,
+                quantity=quantity,
+                order_type=order_type_enum,
+                limit_price=limit_price,
+                stop_price=stop_price,
+                product_type=product_type
+            )
+            
+            # Add to orders list
+            self.orders.append(order)
+            
+            # For market orders, execute immediately
+            if order_type_enum == OrderType.MARKET:
+                self._execute_order(order, price, current_time)
+                
+            return order
         
     def _execute_order(self, order: Order, price: float, time: datetime) -> None:
         """
@@ -423,14 +532,18 @@ class BacktestEngine:
         # Calculate commission
         commission = price * order.quantity * self.commission_rate / 100
         
+        # Check if this is an option order
+        is_option = "CE" in order.symbol or "PE" in order.symbol or order.product_type == "MIS"
+        
         # Update capital
         if order.side == OrderSide.BUY:
             cost = price * order.quantity + commission
             self.capital -= cost
             
             # Create or update position
-            if order.symbol in self.active_positions:
-                position = self.active_positions[order.symbol]
+            position_dict = self.active_option_positions if is_option else self.active_positions
+            if order.symbol in position_dict:
+                position = position_dict[order.symbol]
                 # If position is on opposite side, close it first
                 if position.side == OrderSide.SELL:
                     pnl = position.close(price, time)
@@ -442,9 +555,11 @@ class BacktestEngine:
                         side=OrderSide.BUY,
                         quantity=order.quantity,
                         entry_price=price,
-                        entry_time=time
+                        entry_time=time,
+                        product_type=order.product_type,
+                        is_option=is_option
                     )
-                    self.active_positions[order.symbol] = position
+                    position_dict[order.symbol] = position
                 else:
                     # Average in to existing position
                     total_quantity = position.quantity + order.quantity
@@ -458,17 +573,20 @@ class BacktestEngine:
                     side=OrderSide.BUY,
                     quantity=order.quantity,
                     entry_price=price,
-                    entry_time=time
+                    entry_time=time,
+                    product_type=order.product_type,
+                    is_option=is_option
                 )
-                self.active_positions[order.symbol] = position
+                position_dict[order.symbol] = position
                 
         elif order.side == OrderSide.SELL:
             proceeds = price * order.quantity - commission
             self.capital += proceeds
             
             # Update position
-            if order.symbol in self.active_positions:
-                position = self.active_positions[order.symbol]
+            position_dict = self.active_option_positions if is_option else self.active_positions
+            if order.symbol in position_dict:
+                position = position_dict[order.symbol]
                 # If position is on same side, add to it (for shorts)
                 if position.side == OrderSide.SELL:
                     total_quantity = position.quantity + order.quantity
@@ -489,15 +607,17 @@ class BacktestEngine:
                             "exit_price": price,
                             "quantity": order.quantity,
                             "side": "LONG",
+                            "type": "OPTION" if position.is_option else "EQUITY",
+                            "product_type": position.product_type,
                             "pnl": pnl,
-                            "pnl_pct": pnl / (position.entry_price * order.quantity) * 100,
+                            "pnl_pct": (pnl / (position.entry_price * order.quantity) * 100) if position.entry_price > 0 else 0,
                             "status": "PARTIAL"
                         })
                     else:
                         # Full close
                         pnl = position.close(price, time)
                         # Remove from active positions
-                        del self.active_positions[order.symbol]
+                        del position_dict[order.symbol]
                         # Add to closed positions
                         self.positions.append(position)
                         # Record the trade
@@ -509,8 +629,10 @@ class BacktestEngine:
                             "exit_price": price,
                             "quantity": position.quantity,
                             "side": "LONG",
+                            "type": "OPTION" if position.is_option else "EQUITY",
+                            "product_type": position.product_type,
                             "pnl": pnl,
-                            "pnl_pct": pnl / (position.entry_price * position.quantity) * 100,
+                            "pnl_pct": (pnl / (position.entry_price * position.quantity) * 100) if position.entry_price > 0 else 0,
                             "status": "CLOSED"
                         })
             else:
@@ -520,9 +642,11 @@ class BacktestEngine:
                     side=OrderSide.SELL,
                     quantity=order.quantity,
                     entry_price=price,
-                    entry_time=time
+                    entry_time=time,
+                    product_type=order.product_type,
+                    is_option=is_option
                 )
-                self.active_positions[order.symbol] = position
+                position_dict[order.symbol] = position
                 
         # Log execution
         self.logger.info(f"Executed: {order} @ {price} - Capital: {self.capital:.2f}")
@@ -563,6 +687,11 @@ class BacktestEngine:
         for symbol, position in list(self.active_positions.items()):
             position.update_pnl(bar['close'])
             
+        for symbol, position in list(self.active_option_positions.items()):
+            # For options, we need option prices, but we use a simplified model here
+            # where option price moves proportionally with the underlying
+            position.update_pnl(bar['close'])
+            
     def _update_equity_curve(self, time: datetime, price: float) -> None:
         """
         Update equity curve
@@ -580,15 +709,21 @@ class BacktestEngine:
                 # For short positions, subtract value (simplified)
                 position_value -= position.quantity * price
                 
+        # For options, use current P&L
+        option_value = 0
+        for symbol, position in self.active_option_positions.items():
+            option_value += position.pnl
+                
         # Calculate equity
-        equity = self.capital + position_value
+        equity = self.capital + position_value + option_value
         
         # Add to equity curve
         self.equity_curve.append({
             "time": time,
             "equity": equity,
             "capital": self.capital,
-            "position_value": position_value
+            "position_value": position_value,
+            "option_value": option_value
         })
         
     def _close_all_positions(self, bar: pd.Series) -> None:
@@ -598,11 +733,43 @@ class BacktestEngine:
         Args:
             bar: Last price bar
         """
+        # Close equity positions
         for symbol, position in list(self.active_positions.items()):
             if position.side == OrderSide.BUY:
-                self._create_order(symbol, OrderSide.SELL, position.quantity, bar)
+                self._create_order_from_details({
+                    "symbol": symbol,
+                    "transaction_type": "SELL",
+                    "quantity": position.quantity,
+                    "price": bar['close'],
+                    "product_type": position.product_type
+                }, bar.name)
             else:
-                self._create_order(symbol, OrderSide.BUY, position.quantity, bar)
+                self._create_order_from_details({
+                    "symbol": symbol,
+                    "transaction_type": "BUY",
+                    "quantity": position.quantity,
+                    "price": bar['close'],
+                    "product_type": position.product_type
+                }, bar.name)
+        
+        # Close option positions
+        for symbol, position in list(self.active_option_positions.items()):
+            if position.side == OrderSide.BUY:
+                self._create_order_from_details({
+                    "symbol": symbol,
+                    "transaction_type": "SELL",
+                    "quantity": position.quantity,
+                    "price": bar['close'] * 0.1,  # Simplified option pricing
+                    "product_type": position.product_type
+                }, bar.name)
+            else:
+                self._create_order_from_details({
+                    "symbol": symbol,
+                    "transaction_type": "BUY",
+                    "quantity": position.quantity,
+                    "price": bar['close'] * 0.1,  # Simplified option pricing
+                    "product_type": position.product_type
+                }, bar.name)
                 
     def _calculate_performance(self) -> Dict:
         """
