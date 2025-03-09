@@ -5,6 +5,13 @@ Created on Sun Mar 02 08:51:09 2025
 @author: Mahesh Naidu
 """
 
+# -*- coding: utf-8 -*-
+"""
+Created on Sun Mar 02 08:51:09 2025
+
+@author: Mahesh Naidu
+"""
+
 """
 Paper Trading Simulator for Gann Trading System
 Simulates live trading without real money
@@ -15,6 +22,7 @@ import numpy as np
 import logging
 import time
 import json
+import threading
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import Dict, List, Optional, Union, Any, Tuple
@@ -23,7 +31,7 @@ from core.gann.square_of_9 import GannSquareOf9
 from core.strategy.base_strategy import BaseStrategy, TimeFrame, SignalType
 from api.factory import get_client, get_websocket
 from utils.logger import TradeLogger
-
+from paper_trading.virtual_broker import VirtualBroker, OrderSide, OrderType, OrderStatus, ProductType
 
 class PaperTradingSimulator:
     """
@@ -49,7 +57,6 @@ class PaperTradingSimulator:
         """
         self.strategy = strategy
         self.initial_capital = initial_capital
-        self.capital = initial_capital
         self.commission_rate = commission_rate
         self.slippage = slippage
         self.use_real_time_data = use_real_time_data
@@ -60,12 +67,17 @@ class PaperTradingSimulator:
             symbol=strategy.symbol
         )
         
-        # Trading state
-        self.positions = {}  # Symbol -> Position details
-        self.pending_orders = {}  # Order ID -> Order details
-        self.filled_orders = {}  # Order ID -> Order details
-        self.trade_history = []  # List of closed trades
-        self.equity_curve = []  # List of equity points
+        # Initialize virtual broker
+        self.broker = VirtualBroker(
+            initial_capital=initial_capital,
+            commission_rate=commission_rate,
+            slippage=slippage
+        )
+        
+        # Register broker callbacks
+        self.broker.on_order_update = self._on_order_update
+        self.broker.on_trade_update = self._on_trade_update
+        self.broker.on_position_update = self._on_position_update
         
         # Market data
         self.price_data = pd.DataFrame()  # Historical price data
@@ -84,6 +96,15 @@ class PaperTradingSimulator:
         self.start_time = None
         self.last_process_time = None
         self.processing_interval = 60  # Process market data every 60 seconds
+        self.simulation_speed = 1.0  # Simulation speed multiplier (for backtesting mode)
+        
+        # Thread for backtesting simulation
+        self.simulation_thread = None
+        self.stop_simulation = threading.Event()
+        
+        # Position management
+        self.position_details = {}  # Current position details
+        self.active_signal = SignalType.NO_SIGNAL
         
     def initialize(self) -> bool:
         """
@@ -93,6 +114,9 @@ class PaperTradingSimulator:
             True if initialization successful, False otherwise
         """
         self.logger.logger.info("Initializing paper trading simulator")
+        
+        # Reset broker
+        self.broker.reset()
         
         # Connect to API if using real-time data
         if self.use_real_time_data:
@@ -113,16 +137,9 @@ class PaperTradingSimulator:
                     return False
                     
         # Reset state
-        self.capital = self.initial_capital
-        self.positions = {}
-        self.pending_orders = {}
-        self.filled_orders = {}
-        self.trade_history = []
-        self.equity_curve = []
+        self.position_details = {}
+        self.active_signal = SignalType.NO_SIGNAL
         self.latest_prices = {}
-        
-        # Add initial equity point
-        self._update_equity()
         
         return True
         
@@ -160,7 +177,10 @@ class PaperTradingSimulator:
                 self.logger.logger.info(f"Subscribed to real-time data for {self.strategy.symbol}")
         else:
             # Use historical data for simulation
-            self._simulate_with_historical_data()
+            self.stop_simulation.clear()
+            self.simulation_thread = threading.Thread(target=self._simulate_with_historical_data)
+            self.simulation_thread.daemon = True
+            self.simulation_thread.start()
             
     def stop(self) -> None:
         """Stop the paper trading simulator"""
@@ -169,6 +189,11 @@ class PaperTradingSimulator:
             
         self.is_running = False
         
+        # Stop simulation thread
+        if self.simulation_thread and self.simulation_thread.is_alive():
+            self.stop_simulation.set()
+            self.simulation_thread.join(timeout=5.0)
+            
         # Close all positions
         self._close_all_positions()
         
@@ -201,11 +226,8 @@ class PaperTradingSimulator:
         # Update prices
         self.latest_prices[self.strategy.symbol] = latest_price
         
-        # Update equity
-        self._update_equity()
-        
         # Process pending orders
-        self._process_pending_orders()
+        self.broker.execute_all_market_orders(self.strategy.symbol, latest_price)
         
         # Get historical data for strategy
         historical_data = self._get_historical_data_for_strategy()
@@ -230,37 +252,48 @@ class PaperTradingSimulator:
         
         # Set index to datetime
         if 'datetime' in self.price_data.columns:
-            self.price_data = self.price_data.set_index('datetime')
+            data = self.price_data.set_index('datetime')
+        else:
+            data = self.price_data.copy()
             
         # Track the current time in simulation
         current_idx = 1  # Start from second bar to have at least one previous bar
         
-        while current_idx < len(self.price_data) and self.is_running:
+        while current_idx < len(data) and self.is_running and not self.stop_simulation.is_set():
             # Get current and previous bars
-            current_bar = self.price_data.iloc[current_idx]
-            prev_bars = self.price_data.iloc[:current_idx]
+            current_bar = data.iloc[current_idx]
+            prev_bars = data.iloc[:current_idx]
             
             # Update latest prices
-            self.latest_prices[self.strategy.symbol] = current_bar['close']
+            current_price = current_bar['close']
+            self.latest_prices[self.strategy.symbol] = current_price
             
-            # Update equity
-            self._update_equity()
-            
-            # Process pending orders
-            self._process_pending_orders()
+            # Simulate market data update
+            self.broker.process_market_data(self.strategy.symbol, {
+                'ltp': current_price,
+                'high': current_bar['high'],
+                'low': current_bar['low'],
+                'open': current_bar['open'],
+                'close': current_bar['close'],
+                'volume': current_bar.get('volume', 0)
+            })
             
             # Check for signals
             signal = self.strategy.process_market_data(prev_bars)
             
             # Handle signal
             if signal != SignalType.NO_SIGNAL:
-                self._handle_signal(signal, current_bar['close'], prev_bars.index[-1])
+                simulated_time = prev_bars.index[-1]
+                if isinstance(simulated_time, pd.Timestamp):
+                    simulated_time = simulated_time.to_pydatetime()
+                self._handle_signal(signal, current_price, simulated_time)
                 
             # Move to next bar
             current_idx += 1
             
             # Simulate delay between bars
-            time.sleep(0.01)
+            delay = 0.1 / self.simulation_speed  # Adjust based on simulation speed
+            time.sleep(delay)
             
         # Close all positions at the end
         self._close_all_positions()
@@ -282,6 +315,14 @@ class PaperTradingSimulator:
         
         if symbol and price:
             self.latest_prices[symbol] = price
+            
+            # Process market data
+            self.broker.process_market_data(symbol, tick_data)
+            
+            # Check if it's time to process strategy
+            current_time = datetime.now()
+            if (current_time - self.last_process_time).total_seconds() >= self.processing_interval:
+                self.process()
             
     def _get_latest_price(self, symbol: str) -> Optional[float]:
         """
@@ -311,7 +352,8 @@ class PaperTradingSimulator:
                 
         # If using historical data, use the last price
         if not self.price_data.empty:
-            last_price = self.price_data.iloc[-1]['close']
+            last_row = self.price_data.iloc[-1]
+            last_price = last_row['close']
             self.latest_prices[symbol] = last_price
             return last_price
             
@@ -329,15 +371,19 @@ class PaperTradingSimulator:
             try:
                 # Calculate timeframe in minutes
                 timeframe_minutes = {
-                    '1minute': 1,
-                    '5minute': 5,
-                    '15minute': 15,
-                    '30minute': 30,
-                    '1hour': 60,
-                    '1day': 1440
+                    TimeFrame.MINUTE_1: 1,
+                    TimeFrame.MINUTE_3: 3,
+                    TimeFrame.MINUTE_5: 5,
+                    TimeFrame.MINUTE_15: 15,
+                    TimeFrame.MINUTE_30: 30,
+                    TimeFrame.HOUR_1: 60,
+                    TimeFrame.HOUR_2: 120,
+                    TimeFrame.HOUR_4: 240,
+                    TimeFrame.DAY_1: 1440,
+                    TimeFrame.WEEK_1: 10080
                 }
                 
-                minutes = timeframe_minutes.get(self.strategy.timeframe.value, 1)
+                minutes = timeframe_minutes.get(self.strategy.timeframe, 1)
                 
                 # Calculate dates
                 end_date = datetime.now()
@@ -393,81 +439,413 @@ class PaperTradingSimulator:
                 
         return None
         
-    def _update_equity(self) -> None:
-        """Update equity curve"""
-        # Calculate position value
-        position_value = 0
-        for symbol, position in self.positions.items():
-            if position['is_option']:
-                # For options, use current P&L
-                position_value += position['pnl']
-            else:
-                # For equity, use latest price
-                latest_price = self._get_latest_price(symbol)
-                if latest_price:
-                    position_value += position['quantity'] * latest_price
-                    
-        # Calculate equity
-        equity = self.capital + position_value
-        
-        # Add to equity curve
-        self.equity_curve.append({
-            'time': datetime.now(),
-            'equity': equity,
-            'capital': self.capital,
-            'position_value': position_value
-        })
-        
-    def _process_pending_orders(self) -> None:
-        """Process pending orders"""
-        for order_id, order in list(self.pending_orders.items()):
-            # Check if order is still valid
-            if order['status'] != 'PENDING':
-                continue
-                
-            # Get latest price
-            latest_price = self._get_latest_price(order['symbol'])
-            if not latest_price:
-                continue
-                
-            # Check if order can be filled
-            filled = False
-            
-            if order['order_type'] == 'MARKET':
-                # Market orders are filled immediately
-                filled = True
-                fill_price = latest_price
-                
-            elif order['order_type'] == 'LIMIT':
-                # Limit orders are filled if price crosses limit price
-                if (order['side'] == 'BUY' and latest_price <= order['price']) or \
-                   (order['side'] == 'SELL' and latest_price >= order['price']):
-                    filled = True
-                    fill_price = order['price']
-                    
-            elif order['order_type'] == 'STOP':
-                # Stop orders are filled if price crosses stop price
-                if (order['side'] == 'BUY' and latest_price >= order['stop_price']) or \
-                   (order['side'] == 'SELL' and latest_price <= order['stop_price']):
-                    filled = True
-                    fill_price = latest_price
-                    
-            # Fill order if conditions met
-            if filled:
-                self._fill_order(order_id, fill_price)
-                
-    def _fill_order(self, order_id: str, fill_price: float) -> None:
+    def _handle_signal(self, 
+                      signal: SignalType, 
+                      current_price: float, 
+                      timestamp: datetime) -> None:
         """
-        Fill an order
+        Handle strategy signal
         
         Args:
-            order_id: Order ID
-            fill_price: Price to fill at
+            signal: Signal type
+            current_price: Current market price
+            timestamp: Signal timestamp
         """
-        if order_id not in self.pending_orders:
-            return
-            
-        order = self.pending_orders[order_id]
+        self.logger.log_signal(signal.name, current_price)
         
-        # Apply slippage
-        if order['side
+        # Update active signal
+        if signal != SignalType.NO_SIGNAL:
+            self.active_signal = signal
+        
+        # Get option chain if needed
+        option_chain = self._get_option_chain(self.strategy.symbol)
+        
+        if signal == SignalType.LONG:
+            # Execute long strategy
+            execution = self.strategy.execute_long_strategy(
+                current_price=current_price,
+                capital=self.broker.capital,
+                option_chain=option_chain
+            )
+            
+            if "error" in execution:
+                self.logger.log_error("STRATEGY", f"Error executing long strategy: {execution['error']}")
+                return
+                
+            # Store position details
+            self.position_details = execution
+                
+            # Place orders
+            for order_details in execution.get("orders", []):
+                self._place_order_from_details(order_details)
+                
+        elif signal == SignalType.SHORT:
+            # Execute short strategy
+            execution = self.strategy.execute_short_strategy(
+                current_price=current_price,
+                capital=self.broker.capital,
+                option_chain=option_chain
+            )
+            
+            if "error" in execution:
+                self.logger.log_error("STRATEGY", f"Error executing short strategy: {execution['error']}")
+                return
+                
+            # Store position details
+            self.position_details = execution
+                
+            # Place orders
+            for order_details in execution.get("orders", []):
+                self._place_order_from_details(order_details)
+                
+        elif signal == SignalType.EXIT_LONG:
+            # Execute exit long strategy
+            execution = self.strategy.execute_exit_long(
+                current_price=current_price,
+                position_details=self.position_details
+            )
+            
+            if "error" in execution:
+                self.logger.log_error("STRATEGY", f"Error executing exit long strategy: {execution['error']}")
+                return
+                
+            # Place orders
+            for order_details in execution.get("orders", []):
+                self._place_order_from_details(order_details)
+                
+            # Reset position details
+            self.position_details = {}
+            self.active_signal = SignalType.NO_SIGNAL
+                
+        elif signal == SignalType.EXIT_SHORT:
+            # Execute exit short strategy
+            execution = self.strategy.execute_exit_short(
+                current_price=current_price,
+                position_details=self.position_details
+            )
+            
+            if "error" in execution:
+                self.logger.log_error("STRATEGY", f"Error executing exit short strategy: {execution['error']}")
+                return
+                
+            # Place orders
+            for order_details in execution.get("orders", []):
+                self._place_order_from_details(order_details)
+                
+            # Reset position details
+            self.position_details = {}
+            self.active_signal = SignalType.NO_SIGNAL
+    
+    def _place_order_from_details(self, order_details: Dict[str, Any]) -> str:
+        """
+        Place order from strategy order details
+        
+        Args:
+            order_details: Order details from strategy execution
+            
+        Returns:
+            Order ID
+        """
+        # Extract order details
+        symbol = order_details.get("symbol")
+        transaction_type = order_details.get("transaction_type")
+        quantity = order_details.get("quantity")
+        price = order_details.get("price")
+        order_type = order_details.get("order_type", "MARKET")
+        product_type = order_details.get("product_type", "CNC")
+        
+        # Map to broker enums
+        if transaction_type == "BUY":
+            side = OrderSide.BUY
+        else:
+            side = OrderSide.SELL
+            
+        # Map order type
+        if order_type == "MARKET":
+            broker_order_type = OrderType.MARKET
+        elif order_type == "LIMIT":
+            broker_order_type = OrderType.LIMIT
+        elif order_type == "STOP":
+            broker_order_type = OrderType.STOP
+        elif order_type == "STOP_LIMIT":
+            broker_order_type = OrderType.STOP_LIMIT
+        else:
+            broker_order_type = OrderType.MARKET
+            
+        # Map product type
+        if product_type == "CNC":
+            broker_product_type = ProductType.CNC
+        elif product_type == "MIS":
+            broker_product_type = ProductType.MIS
+        else:
+            broker_product_type = ProductType.NRML
+            
+        # Place order
+        result = self.broker.place_order(
+            symbol=symbol,
+            side=side,
+            quantity=quantity,
+            order_type=broker_order_type,
+            price=price,
+            product_type=broker_product_type,
+            tag=f"Signal: {self.active_signal.name}"
+        )
+        
+        if result.get("status") == "SUCCESS":
+            order_id = result.get("order_id")
+            self.logger.log_order(
+                order_type=broker_order_type.name,
+                side=side.name,
+                quantity=quantity,
+                price=price,
+                order_id=order_id,
+                status="PLACED"
+            )
+            return order_id
+        else:
+            self.logger.log_error("ORDER", f"Failed to place order: {result.get('reason')}")
+            return ""
+        
+    def _on_order_update(self, order: Dict[str, Any]) -> None:
+        """
+        Callback for order updates
+        
+        Args:
+            order: Updated order details
+        """
+        self.logger.log_order(
+            order_type=order["order_type"].name,
+            side=order["side"].name,
+            quantity=order["quantity"],
+            price=order["price"] if order["price"] else 0.0,
+            order_id=order["order_id"],
+            status=order["status"].name
+        )
+        
+    def _on_trade_update(self, trade: Dict[str, Any]) -> None:
+        """
+        Callback for trade updates
+        
+        Args:
+            trade: Trade details
+        """
+        self.logger.log_trade(
+            side=trade["side"].name,
+            quantity=trade["quantity"],
+            price=trade["price"],
+            pnl=None  # P&L calculated at position level
+        )
+        
+    def _on_position_update(self, position: Dict[str, Any]) -> None:
+        """
+        Callback for position updates
+        
+        Args:
+            position: Updated position details
+        """
+        self.logger.log_position(
+            status="UPDATED",
+            quantity=position["quantity"],
+            entry_price=position["average_price"],
+            current_price=self._get_latest_price(position["symbol"]),
+            pnl=position["unrealized_pnl"]
+        )
+        
+    def _close_all_positions(self) -> None:
+        """Close all open positions"""
+        # Get all active positions
+        positions = self.broker.get_positions(active_only=True)
+        
+        for position in positions:
+            symbol = position["symbol"]
+            quantity = abs(position["quantity"])
+            
+            if quantity == 0:
+                continue
+                
+            current_price = self._get_latest_price(symbol)
+            if not current_price:
+                self.logger.log_error("CLOSE", f"Cannot close position for {symbol}: No price available")
+                continue
+                
+            # Place order to close position
+            if position["quantity"] > 0:
+                # Close long position
+                self.broker.place_order(
+                    symbol=symbol,
+                    side=OrderSide.SELL,
+                    quantity=quantity,
+                    order_type=OrderType.MARKET,
+                    tag="Close All Positions"
+                )
+            else:
+                # Close short position
+                self.broker.place_order(
+                    symbol=symbol,
+                    side=OrderSide.BUY,
+                    quantity=quantity,
+                    order_type=OrderType.MARKET,
+                    tag="Close All Positions"
+                )
+                
+        # Reset position details
+        self.position_details = {}
+        self.active_signal = SignalType.NO_SIGNAL
+        
+    def get_performance_metrics(self) -> Dict[str, Any]:
+        """
+        Calculate performance metrics
+        
+        Returns:
+            Dictionary with performance metrics
+        """
+        portfolio_value = self.broker.get_portfolio_value()
+        equity_curve = self.broker.get_equity_curve()
+        trades = self.broker.get_trades()
+        
+        # Calculate metrics
+        total_trades = len(trades)
+        
+        if total_trades == 0:
+            return {
+                "initial_capital": self.initial_capital,
+                "current_equity": portfolio_value["total_equity"],
+                "return_pct": portfolio_value["returns_pct"],
+                "total_trades": 0,
+                "winning_trades": 0,
+                "losing_trades": 0,
+                "win_rate": 0,
+                "profit_factor": 0,
+                "average_win": 0,
+                "average_loss": 0,
+                "max_drawdown_pct": 0
+            }
+            
+        # Calculate winning/losing trades
+        winning_trades = []
+        losing_trades = []
+        
+        for trade in trades:
+            # Calculate P&L
+            if trade["side"] == OrderSide.BUY:
+                # Calculate when closing a long position
+                for order in self.broker.orders.values():
+                    if (order["symbol"] == trade["symbol"] and 
+                        order["side"] == OrderSide.SELL and 
+                        order["status"] == OrderStatus.FILLED):
+                        # Found matching sell order
+                        pnl = (order["average_price"] - trade["price"]) * trade["quantity"]
+                        if pnl > 0:
+                            winning_trades.append(pnl)
+                        else:
+                            losing_trades.append(pnl)
+                        break
+            else:
+                # Calculate when closing a short position
+                for order in self.broker.orders.values():
+                    if (order["symbol"] == trade["symbol"] and 
+                        order["side"] == OrderSide.BUY and 
+                        order["status"] == OrderStatus.FILLED):
+                        # Found matching buy order
+                        pnl = (trade["price"] - order["average_price"]) * trade["quantity"]
+                        if pnl > 0:
+                            winning_trades.append(pnl)
+                        else:
+                            losing_trades.append(pnl)
+                        break
+                        
+        # Calculate metrics
+        num_winners = len(winning_trades)
+        num_losers = len(losing_trades)
+        win_rate = num_winners / total_trades if total_trades > 0 else 0
+        
+        total_profit = sum(winning_trades)
+        total_loss = abs(sum(losing_trades))
+        profit_factor = total_profit / total_loss if total_loss > 0 else float('inf')
+        
+        average_win = sum(winning_trades) / num_winners if num_winners > 0 else 0
+        average_loss = sum(losing_trades) / num_losers if num_losers > 0 else 0
+        
+        # Calculate drawdown
+        max_drawdown = 0
+        max_drawdown_pct = 0
+        peak = self.initial_capital
+        
+        for point in equity_curve:
+            equity = point["total_equity"]
+            if equity > peak:
+                peak = equity
+            
+            drawdown = peak - equity
+            drawdown_pct = drawdown / peak * 100
+            
+            if drawdown_pct > max_drawdown_pct:
+                max_drawdown = drawdown
+                max_drawdown_pct = drawdown_pct
+                
+        return {
+            "initial_capital": self.initial_capital,
+            "current_equity": portfolio_value["total_equity"],
+            "return_pct": portfolio_value["returns_pct"],
+            "total_trades": total_trades,
+            "winning_trades": num_winners,
+            "losing_trades": num_losers,
+            "win_rate": win_rate,
+            "profit_factor": profit_factor,
+            "average_win": average_win,
+            "average_loss": average_loss,
+            "max_drawdown_pct": max_drawdown_pct,
+            "max_drawdown": max_drawdown
+        }
+        
+    def set_simulation_speed(self, speed: float) -> None:
+        """
+        Set simulation speed for backtesting mode
+        
+        Args:
+            speed: Speed multiplier (1.0 = realtime, >1.0 = faster, <1.0 = slower)
+        """
+        if speed <= 0:
+            self.logger.logger.warning("Simulation speed must be positive, setting to 1.0")
+            self.simulation_speed = 1.0
+        else:
+            self.simulation_speed = speed
+            self.logger.logger.info(f"Set simulation speed to {speed}x")
+            
+    def get_account_summary(self) -> Dict[str, Any]:
+        """
+        Get account and trading summary
+        
+        Returns:
+            Dictionary with account summary
+        """
+        portfolio_value = self.broker.get_portfolio_value()
+        positions = self.broker.get_positions(active_only=True)
+        trades = self.broker.get_trades()
+        orders = self.broker.get_orders()
+        
+        # Organize by symbol
+        positions_by_symbol = {}
+        for position in positions:
+            symbol = position["symbol"]
+            positions_by_symbol[symbol] = position
+            
+        # Count orders by status
+        order_stats = {}
+        for order in orders:
+            status = order["status"].name
+            if status not in order_stats:
+                order_stats[status] = 0
+            order_stats[status] += 1
+            
+        return {
+            "capital": portfolio_value["capital"],
+            "position_value": portfolio_value["position_value"],
+            "total_equity": portfolio_value["total_equity"],
+            "returns_pct": portfolio_value["returns_pct"],
+            "active_positions": len(positions),
+            "positions_by_symbol": positions_by_symbol,
+            "total_trades": len(trades),
+            "orders_by_status": order_stats,
+            "active_signal": self.active_signal.name
+        }
